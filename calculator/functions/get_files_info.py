@@ -1,6 +1,8 @@
 import os
 
-schema_get_files_info = {
+from openai.types.chat import ChatCompletionToolParam
+
+schema_get_files_info: ChatCompletionToolParam = {
     "type": "function",
     "function": {
         "name": "get_files_info",
@@ -12,7 +14,7 @@ schema_get_files_info = {
                     "type": "string",
                     "description": "Directory path to list files from, relative to the working directory (default is the working directory itself)",
                 },
-            }
+            },
         },
     },
 }
@@ -20,7 +22,7 @@ schema_get_files_info = {
 def get_files_info(working_directory: str, directory:str = ".") -> str:
 
     output = f"Result for {"current" if directory == "." else directory} directory:\n\t"
-
+    target_dir = directory
     try:
         working_dir_abs = os.path.abspath(working_directory)
         target_dir = os.path.normpath(os.path.join(working_dir_abs, directory))
@@ -38,5 +40,5 @@ def get_files_info(working_directory: str, directory:str = ".") -> str:
             output += f"- {item}: file_size={file_size} bytes, is_dir={is_dir}\n\t"
 
         return output
-    except:
-        return f'{output}Error: Something went wrong while inspecting items in target directory {target_dir}'
+    except Exception:
+        return f"{output}Error: Something went wrong while inspecting items in target directory {target_dir}"

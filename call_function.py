@@ -1,17 +1,21 @@
 import json
 from collections.abc import Callable
 
+from openai.types.chat import ChatCompletionToolParam
+
+from calculator.functions.get_file_content import (
+    get_file_content,
+    schema_get_file_content,
+)
 from calculator.functions.get_files_info import get_files_info, schema_get_files_info
-from calculator.functions.get_file_content import get_file_content, schema_get_file_content
 from calculator.functions.run_python_file import run_python_file, schema_run_python_file
 from calculator.functions.write_file import schema_write_file, write_file
 
-
-available_functions = [
+available_functions: list[ChatCompletionToolParam] = [
     schema_get_files_info,
     schema_get_file_content,
     schema_run_python_file,
-    schema_write_file
+    schema_write_file,
 ]
 
 function_map: dict[str, Callable[..., str]] = {

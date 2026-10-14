@@ -1,6 +1,8 @@
 import os
 
-schema_write_file = {
+from openai.types.chat import ChatCompletionToolParam
+
+schema_write_file: ChatCompletionToolParam = {
     "type": "function",
     "function": {
         "name": "write_file",
@@ -17,7 +19,7 @@ schema_write_file = {
                     "description": "Content to write to given file, this will overwrite previous content",
                 },
             },
-            "required": ["file_path", "content"]
+            "required": ["file_path", "content"],
         },
     },
 }

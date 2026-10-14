@@ -1,7 +1,10 @@
 import os
+
+from openai.types.chat import ChatCompletionToolParam
+
 from config import MAX_CHARS
 
-schema_get_file_content = {
+schema_get_file_content: ChatCompletionToolParam = {
     "type": "function",
     "function": {
         "name": "get_file_content",
@@ -14,7 +17,7 @@ schema_get_file_content = {
                     "description": "File path to read from, relative to the working directory (default is the working directory itself)",
                 },
             },
-            "required": ["file_path"]
+            "required": ["file_path"],
         },
     },
 }

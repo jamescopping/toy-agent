@@ -1,7 +1,9 @@
 import os
 import subprocess
 
-schema_run_python_file = {
+from openai.types.chat import ChatCompletionToolParam
+
+schema_run_python_file: ChatCompletionToolParam = {
     "type": "function",
     "function": {
         "name": "run_python_file",
@@ -15,13 +17,11 @@ schema_run_python_file = {
                 },
                 "args": {
                     "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
+                    "items": {"type": "string"},
                     "description": "Optional arguments that will be passed to the python subprocess if there are any",
                 },
             },
-            "required": ["file_path"]
+            "required": ["file_path"],
         },
     },
 }

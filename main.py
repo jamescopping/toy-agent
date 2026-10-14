@@ -1,12 +1,14 @@
+import argparse
 import json
 import os
-import argparse
+import sys
+
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from call_function import available_functions, call_function
 from config import MAX_CHAT_ITERATIONS
 from prompts import system_prompt
-from call_function import available_functions, call_function
 
 parser = argparse.ArgumentParser(description="jammies ai agent chatbot")
 parser.add_argument("user_prompt", type=str, help="User prompt")
@@ -16,7 +18,10 @@ args = parser.parse_args()
 ## load env vars
 load_dotenv()
 api_key = os.environ.get("OPENROUTER_API_KEY")
-prompt_mode = str.lower(os.environ.get("PROMPT_MODE"))
+
+prompt_mode = os.environ.get("PROMPT_MODE")
+if prompt_mode:
+    prompt_mode = str.lower(prompt_mode)
 
 if api_key is None: raise RuntimeError('OPENROUTER_API_KEY could not be loaded from .env file')
 
@@ -51,7 +56,9 @@ def prompt_agent():
         messages.append(message)
 
         if message.tool_calls:
-            for tool_call in message.tool_calls:
+            for tool_call in message.tool_calls or []:
+                if tool_call.type != "function":
+                    continue
                 try:
                     function_args = json.loads(tool_call.function.arguments or "{}")
                     result_message = call_function(tool_call, args.verbose)
@@ -67,12 +74,12 @@ def prompt_agent():
             return  # final response prompt
     #failed to finish during given iteration loops
     print(f"Failed to produce a final response within the {MAX_CHAT_ITERATIONS} loop iterations...")
-    exit(1)
+    sys.exit(1)
 
 
 if prompt_mode == "disable" or prompt_mode == "disabled":
-    print(f"---prompt skipped---")
-    exit()
+    print("---prompt skipped---")
+    sys.exit()
 
 messages = [
     {
