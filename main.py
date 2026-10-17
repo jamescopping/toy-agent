@@ -10,7 +10,7 @@ from call_function import available_functions, call_function
 from config import MAX_CHAT_ITERATIONS
 from prompts import system_prompt
 
-parser = argparse.ArgumentParser(description="jammies ai agent chatbot")
+parser = argparse.ArgumentParser(description="toy ai agent chatbot")
 parser.add_argument("user_prompt", type=str, help="User prompt")
 parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 args = parser.parse_args()
@@ -64,7 +64,7 @@ def prompt_agent():
                     result_message = call_function(tool_call, args.verbose)
                     if len(result_message["content"]) == 0:
                         raise RuntimeError(f"Error: no result content of called function: {tool_call.function.name}({function_args})")
-                except Exception as e:
+                except RuntimeError as e:
                     print(e)
                 else:
                     if args.verbose: print(f"-> {result_message['content']}")

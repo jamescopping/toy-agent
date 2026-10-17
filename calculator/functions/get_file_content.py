@@ -44,5 +44,3 @@ def get_file_content(working_directory:str, file_path:str) -> str:
 
     except FileNotFoundError:
         return f'Error: File not found or is not a regular file: "{file_path}"'
-    except:
-        return f'Error: Something went wrong while reading from "{file_path}"'
